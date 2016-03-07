@@ -1,0 +1,8 @@
+sudo: required
+
+services:
+  - docker
+
+script:
+  - docker build -t vdechenaux/p2t-ricochet-solver .
+  - docker run vdechenaux/p2t-ricochet-solver
