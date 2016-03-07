@@ -1,12 +1,14 @@
 #include "p2tparser.h"
 
-P2tParser::P2tParser(QObject *parent) : QObject(parent)
+P2tParser::P2tParser(bool spoil, bool spoilMore, QObject *parent) : QObject(parent)
 {
     search = (SearchFunction)QLibrary::resolve(QCoreApplication::applicationDirPath()+"/fogleman-ricochet-solver/_ricochet", "search");
 
     m_pNetworkAccessManager = new QNetworkAccessManager(this);
     connect(m_pNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(parseResponse(QNetworkReply*)));
     m_pNetworkAccessManager->get(QNetworkRequest(QUrl("http://jeux.prise2tete.fr/p2t-ricochet/p2t-ricochet.php5")));
+    m_spoil = spoil;
+    m_spoilMore = spoilMore;
 }
 
 void P2tParser::parseResponse(QNetworkReply *httpReply)
@@ -88,14 +90,19 @@ uint P2tParser::solveGame(Game *game, uint robot)
 
     uchar path[32];
     uint depth = search(game, path, NULL);
-    QTextStream cout(stdout);
-    cout << QString("Optimal solution for %1 robot: %2 movements.").arg(colors.first()).arg(depth) << endl;
-    for (uint i = 0; i < depth; i++)
+
+    if (m_spoil)
     {
-        uint value = path[i];
-        uint color = (value >> 4) & 0x0f;
-        uint direction = value & 0x0f;
-        cout << colors.at(color) << ": " << directions.at(direction) << endl;
+        QTextStream cout(stdout);
+        cout << QString("Optimal solution for %1 robot: %2 movements.").arg(colors.first()).arg(depth) << endl;
+        for (uint i = 0; i < depth; i++)
+        {
+            uint value = path[i];
+            uint color = (value >> 4) & 0x0f;
+            uint direction = value & 0x0f;
+            if (m_spoilMore)
+                cout << colors.at(color) << ": " << directions.at(direction) << endl;
+        }
     }
 
     return depth;
