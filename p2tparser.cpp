@@ -1,12 +1,12 @@
 #include "p2tparser.h"
 
-P2tParser::P2tParser(bool spoil, bool spoilMore, QObject *parent) : QObject(parent)
+P2tParser::P2tParser(bool spoil, bool spoilMore, QString date, QObject *parent) : QObject(parent)
 {
     search = (SearchFunction)QLibrary::resolve(QCoreApplication::applicationDirPath()+"/fogleman-ricochet-solver/_ricochet", "search");
 
     m_pNetworkAccessManager = new QNetworkAccessManager(this);
     connect(m_pNetworkAccessManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(parseResponse(QNetworkReply*)));
-    m_pNetworkAccessManager->get(QNetworkRequest(QUrl("http://jeux.prise2tete.fr/p2t-ricochet/p2t-ricochet.php5")));
+    m_pNetworkAccessManager->get(QNetworkRequest(QUrl("http://jeux.prise2tete.fr/p2t-ricochet/p2t-ricochet.php5?date="+date)));
     m_spoil = spoil;
     m_spoilMore = spoilMore;
 }

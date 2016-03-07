@@ -37,7 +37,7 @@ class P2tParser : public QObject
     uint solveGame(Game *game, uint robot);
     bool m_spoil, m_spoilMore;
 public:
-    explicit P2tParser(bool spoil, bool spoilMore, QObject *parent = 0);
+    explicit P2tParser(bool spoil, bool spoilMore, QString date, QObject *parent = 0);
 
 signals:
 
