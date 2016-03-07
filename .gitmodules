@@ -1,0 +1,3 @@
+[submodule "fogleman-ricochet-solver"]
+	path = fogleman-ricochet-solver
+	url = https://github.com/fogleman/Ricochet.git
