@@ -34,7 +34,7 @@ class P2tParser : public QObject
     Q_OBJECT
     QNetworkAccessManager *m_pNetworkAccessManager;
     SearchFunction search;
-    uint solveGame(Game *game, uint robot);
+    uint solveGame(Game *srcGame, uint robot);
     bool m_spoil, m_spoilMore;
 public:
     explicit P2tParser(bool spoil, bool spoilMore, QString date, QObject *parent = 0);

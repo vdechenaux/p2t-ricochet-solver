@@ -74,22 +74,25 @@ void P2tParser::parseResponse(QNetworkReply *httpReply)
     QCoreApplication::quit();
 }
 
-uint P2tParser::solveGame(Game *game, uint robot)
+uint P2tParser::solveGame(Game *srcGame, uint robot)
 {
+    Game game;
+    memcpy(&game, srcGame, sizeof(game));
+
     QStringList colors = (QStringList() << "White" << "Red" << "Green" << "Blue");
     QStringList directions = (QStringList() << "" << "North" << "East" << "" << "South" << "" << "" << "" << "West");
 
     if (robot != 0)
     {
-        uint oldSelectedRobot = game->robots[0];
-        game->robots[0] = game->robots[robot];
-        game->robots[robot] = oldSelectedRobot;
+        uint oldSelectedRobot = game.robots[0];
+        game.robots[0] = game.robots[robot];
+        game.robots[robot] = oldSelectedRobot;
 
         colors.swap(0, robot);
     }
 
     uchar path[32];
-    uint depth = search(game, path, NULL);
+    uint depth = search(&game, path, NULL);
 
     if (m_spoil)
     {
